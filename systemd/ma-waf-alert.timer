@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Ma-WAF alert check every minute
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+AccuracySec=15s
+Unit=ma-waf-alert.service
+
+[Install]
+WantedBy=timers.target

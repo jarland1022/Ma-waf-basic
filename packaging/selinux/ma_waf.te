@@ -1,0 +1,39 @@
+# Ma-WAF SELinux 策略草案（需在目标机用 checkmodule / semodule_package 编译）
+# 仅作加固起点，上线前请结合 audit.log 用 audit2allow 审阅后再 enforce。
+#
+# 编译示例:
+#   checkmodule -M -m -o ma_waf.mod ma_waf.te
+#   semodule_package -o ma_waf.pp -m ma_waf.mod
+#   semodule -i ma_waf.pp
+
+policy_module(ma_waf, 1.0.0)
+
+require {
+    type unconfined_service_t;
+    type httpd_t;
+    type httpd_config_t;
+    type httpd_log_t;
+    type httpd_exec_t;
+    type var_t;
+    type bin_t;
+    type etc_t;
+    class file { read write open getattr execute execute_no_trans };
+    class dir { search read write add_name remove_name };
+    class tcp_socket { name_connect };
+}
+
+# 自定义类型：管理 API
+type ma_waf_api_t;
+type ma_waf_api_exec_t;
+init_daemon_domain(ma_waf_api_t, ma_waf_api_exec_t)
+
+# 允许 API 读自身配置与写 var（示意；实际需 fcontext 绑定）
+allow ma_waf_api_t etc_t:dir search;
+allow ma_waf_api_t etc_t:file { read open getattr };
+allow ma_waf_api_t var_t:dir { search read write add_name remove_name };
+allow ma_waf_api_t var_t:file { read write open getattr };
+
+# Nginx 反向代理到本机 API
+allow httpd_t ma_waf_api_t:tcp_socket name_connect;
+
+# 说明：完整路径 fcontext 见 docs/selinux-notes.md

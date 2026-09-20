@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>请求已被拦截 — Ma-WAF Community</title>
+  <style>
+    :root { --bg:#0c1222; --fg:#e7eef8; --accent:#3dd6c6; --muted:#93a4bd; --line:#243044; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(900px 480px at 15% 0%, #16324a, var(--bg));
+      color: var(--fg);
+    }
+    main { max-width: 560px; padding: 2rem; text-align: center; }
+    .brand { letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-size: .8rem; }
+    h1 { font-size: 1.45rem; font-weight: 600; margin: .8rem 0 .4rem; }
+    p { color: var(--muted); line-height: 1.65; }
+    .card {
+      margin-top: 1.4rem; text-align: left; border: 1px solid var(--line);
+      border-radius: 12px; padding: 1rem 1.1rem; background: rgba(8, 14, 28, .55);
+    }
+    .card strong { color: var(--fg); }
+    code { font-family: ui-monospace, Consolas, monospace; color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">Ma-WAF Community</div>
+    <h1>请求已被安全策略拦截</h1>
+    <p>该请求触发了 Web 应用防火墙规则（OWASP CRS 或社区自定义策略）。请查看响应头 <code>X-Request-ID</code> 排查误报。</p>
+    <div class="card">
+      <strong>需要生产级运维？</strong>
+      <p>专业版提供多站点管控、威胁情报、地理封锁、SIEM / 合规报表与商用支持，约 ¥4,980 / 节点 / 年。请打开社区控制台（默认 :8090）登录后，进入「申请 14 天专业版试用」页面填写表单。</p>
+    </div>
+  </main>
+</body>
+</html>

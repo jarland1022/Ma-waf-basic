@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ma-WAF 用户手册</title>
+  <style>
+    :root {
+      --blue: #0b4f8a;
+      --blue-deep: #083a66;
+      --line: #d5dee8;
+      --text: #1f2a37;
+      --muted: #6b7c90;
+      --bg: #f0f3f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .top {
+      background: linear-gradient(180deg, #0d5a9c, var(--blue-deep));
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .top a { color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,.4); padding: .25rem .6rem; border-radius: 3px; font-size: .85rem; }
+    .top a:hover { background: rgba(255,255,255,.12); }
+    .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 0; max-width: 1100px; margin: 0 auto; }
+    nav.toc {
+      padding: 1.25rem 1rem;
+      border-right: 1px solid var(--line);
+      background: #fff;
+      position: sticky;
+      top: 52px;
+      height: calc(100vh - 52px);
+      overflow: auto;
+    }
+    nav.toc a {
+      display: block;
+      color: var(--blue);
+      text-decoration: none;
+      padding: 0.35rem 0.25rem;
+      font-size: 0.88rem;
+    }
+    nav.toc a:hover { text-decoration: underline; }
+    main { padding: 1.5rem 1.75rem 3rem; background: #fff; border-left: 1px solid var(--line); }
+    h1 { margin: 0 0 0.5rem; color: var(--blue-deep); font-size: 1.55rem; }
+    h2 { margin: 1.75rem 0 0.65rem; color: var(--blue-deep); font-size: 1.15rem; border-bottom: 1px solid var(--line); padding-bottom: 0.35rem; }
+    h3 { margin: 1.1rem 0 0.4rem; font-size: 1rem; }
+    p, li { color: var(--text); }
+    .muted { color: var(--muted); }
+    code, pre {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      background: #eef3f8;
+      border-radius: 3px;
+    }
+    code { padding: 0.1rem 0.35rem; }
+    pre { padding: 0.85rem 1rem; overflow: auto; border: 1px solid var(--line); }
+    table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.88rem; }
+    th, td { border: 1px solid var(--line); padding: 0.45rem 0.6rem; text-align: left; }
+    th { background: #eef3f8; }
+    @media (max-width: 800px) {
+      .wrap { grid-template-columns: 1fr; }
+      nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <strong>Ma-WAF 用户手册</strong>
+    <a href="/">返回控制台</a>
+  </div>
+  <div class="wrap">
+    <nav class="toc" aria-label="目录">
+      <a href="#intro">1. 产品简介</a>
+      <a href="#login">2. 登录与安全</a>
+      <a href="#nav">3. 界面导航</a>
+      <a href="#sites">4. 站点管理</a>
+      <a href="#policy">5. 策略与规则</a>
+      <a href="#monitor">6. 监控与报表</a>
+      <a href="#objects">7. 对象</a>
+      <a href="#system">8. 系统运维</a>
+      <a href="#rules-up">9. 规则库本地升级</a>
+      <a href="#ops">10. 常用运维命令</a>
+      <a href="#faq">11. 常见问题</a>
+    </nav>
+    <main>
+      <h1 id="intro">Ma-WAF 用户手册</h1>
+      <p class="muted">本手册说明管理控制台（默认 <code>https://&lt;IP&gt;:8443/</code>）的主要功能与日常操作。数据面基于 Nginx + ModSecurity + OWASP CRS。</p>
+
+      <h2 id="login">2. 登录与安全</h2>
+      <ul>
+        <li>默认管理入口：<code>https://&lt;设备IP&gt;:8443/</code>（自签证书需浏览器信任或继续访问）。</li>
+        <li>默认账号：<code>admin</code>（生产环境请修改密码并启用 TOTP / bcrypt）。</li>
+        <li>管理面默认仅允许本机与私网访问（见 Nginx <code>allow</code> 列表）。</li>
+      </ul>
+
+      <h2 id="nav">3. 界面导航</h2>
+      <p>顶栏为主模块，左侧为子菜单，内容区顶部为面包屑。</p>
+      <table>
+        <thead><tr><th>顶栏</th><th>主要内容</th></tr></thead>
+        <tbody>
+          <tr><td>首页</td><td>总览仪表盘、紧急旁路</td></tr>
+          <tr><td>站点</td><td>Web 站点、站点自发现</td></tr>
+          <tr><td>策略</td><td>安全策略模板、防护规则、例外、重保模式</td></tr>
+          <tr><td>监控</td><td>安全事件、报表导出</td></tr>
+          <tr><td>对象</td><td>地址簿、IP/Geo 名单</td></tr>
+          <tr><td>系统</td><td>系统与特征库、规则升级、PKI、运维、故障排查、许可证</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="sites">4. 站点管理</h2>
+      <h3>Web 站点</h3>
+      <p>创建/编辑反向代理站点：域名、监听端口、上游、是否启用 WAF、限流、JS Challenge、Geo、API 前缀等。保存后会触发 Nginx 配置检测与 reload。</p>
+      <h3>站点自发现</h3>
+      <p>从访问日志解析 Host，对照已纳管站点；可将未防护域名一键创建站点草稿。</p>
+
+      <h2 id="policy">5. 策略与规则</h2>
+      <ul>
+        <li><b>安全策略</b>：预置 loose / normal / strict / debug / emergency 等画像，可套用到站点。</li>
+        <li><b>防护规则</b>：查看/启停自定义规则、虚拟补丁、规则包。</li>
+        <li><b>规则例外</b>：对误报 URL/规则做放行。</li>
+        <li><b>重保模式</b>：一键拉高 CRS 偏执级别并确保引擎 On（需填写原因写入审计）。</li>
+        <li><b>引擎模式</b>：<code>On</code>（拦截）/ <code>DetectionOnly</code>（仅检测）/ <code>Off</code>。</li>
+      </ul>
+
+      <h2 id="monitor">6. 监控与报表</h2>
+      <ul>
+        <li><b>安全事件</b>：展示 Host、状态码、请求/响应长度、攻击字段；支持「详情」查看规则命中与 POST body 预览。</li>
+        <li><b>报表</b>：攻击趋势、Top IP/规则，可导出 CSV / 合规 HTML。</li>
+      </ul>
+
+      <h2 id="objects">7. 对象</h2>
+      <ul>
+        <li><b>地址簿</b>：可复用 IP/网段对象，可应用到黑/白名单。</li>
+        <li><b>IP / Geo 名单</b>：黑白名单与国家封锁（需 GeoIP MMDB 与模块）。</li>
+      </ul>
+
+      <h2 id="system">8. 系统运维</h2>
+      <ul>
+        <li><b>系统与特征库</b>：主机信息、CRS/Geo/情报状态；页面内可本地升级规则库。</li>
+        <li><b>PKI</b>：生成管理面 <code>admin.crt</code> / <code>admin.key</code>。</li>
+        <li><b>系统运维</b>：主机指标、HA 状态、告警 Webhook、自动加黑等。</li>
+        <li><b>故障排查</b>：一键体检（nginx -t、证书、控制台文件、端口、磁盘等），可修复证书 / Reload，并查看 error 日志尾部与常见问题速查。</li>
+        <li><b>许可证</b>：指纹与 .lic 导入。</li>
+      </ul>
+
+      <h2 id="rules-up">9. 规则库本地升级</h2>
+      <p>路径：<b>系统 → 系统与特征库</b> 或 <b>系统 → 特征库升级</b>。</p>
+      <ol>
+        <li>准备 <code>.tgz</code> / <code>.tar.gz</code>，建议包含 <code>custom/*.conf</code> 和/或 <code>rules/*.conf</code>。</li>
+        <li>可选上传同名 <code>.sig</code>（配合 <code>conf/update-pubkey.pem</code>）。</li>
+        <li>勾选「立即 promote 并 reload」后点击升级。</li>
+      </ol>
+      <pre>sudo ./scripts/update_rules.sh --offline /path/to/rules_bundle.tgz</pre>
+
+      <h2 id="ops">10. 常用运维命令</h2>
+      <pre># 功能可用性验证
+sudo ./scripts/test_waf_features.sh
+
+# 修复证书/目录/控制台
+sudo ./scripts/fix_runtime.sh
+
+# 编译安装 API
+sudo ./scripts/install_api.sh
+
+# 同步控制台静态资源
+sudo ./scripts/sync_console.sh
+
+# Nginx 检测与重载
+sudo /usr/local/nginx/sbin/nginx -t && sudo /usr/local/nginx/sbin/nginx -s reload</pre>
+
+      <h2 id="faq">11. 常见问题</h2>
+      <h3>控制台打不开 / nginx -t 报缺证书</h3>
+      <p>到 <b>系统 → PKI</b> 生成证书，或执行 <code>fix_runtime.sh</code>，再 <code>nginx -s reload</code>。</p>
+      <h3>数据面返回 502</h3>
+      <p>WAF/Nginx 入口正常，但 upstream 业务未启动。请检查站点上游地址与后端进程。</p>
+      <h3>攻击探针未拦截</h3>
+      <p>确认 <code>SecRuleEngine</code> 为 <code>On</code>（DetectionOnly 只记审计不拦截），且站点启用了 ModSecurity。</p>
+      <h3>界面改了不生效</h3>
+      <p>同步 <code>management/console</code> → <code>share/console</code> 后强制刷新（Ctrl+F5）。</p>
+
+      <p class="muted" style="margin-top:2rem">文档版本随产品控制台发布；更多架构说明见仓库 <code>docs/</code>。</p>
+    </main>
+  </div>
+</body>
+</html>

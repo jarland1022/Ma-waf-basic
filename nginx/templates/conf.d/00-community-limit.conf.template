@@ -1,0 +1,3 @@
+# 社区版按源 IP 限速。区域必须位于 http 上下文。
+limit_req_zone $binary_remote_addr zone=ma_community:10m rate=20r/s;
+limit_req_status 429;

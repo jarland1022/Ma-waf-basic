@@ -1,0 +1,39 @@
+services:
+  waf:
+    image: owasp/modsecurity-crs:nginx
+    restart: unless-stopped
+    ports:
+      - "${WAF_HTTP_PORT:-8080}:8080"
+    environment:
+      BACKEND: http://demo:80
+      SERVER_NAME: localhost
+      PORT: "8080"
+      MODSEC_RULE_ENGINE: ${MODSEC_RULE_ENGINE:-On}
+      BLOCKING_PARANOIA: "1"
+      DETECTION_PARANOIA: "1"
+      ANOMALY_INBOUND: "5"
+      ANOMALY_OUTBOUND: "4"
+      SERVER_TOKENS: "off"
+    volumes:
+      - ./nginx/templates/conf.d/default.conf.template:/etc/nginx/templates/conf.d/default.conf.template
+      - ./nginx/templates/conf.d/00-community-limit.conf.template:/etc/nginx/templates/conf.d/00-community-limit.conf.template
+      - ./nginx/error-pages:/opt/ma-waf/error-pages:ro
+      - ./rules/REQUEST-900-ma-waf-community.conf:/etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf:ro
+    depends_on:
+      - demo
+
+  demo:
+    image: nginx:alpine
+    restart: unless-stopped
+    expose:
+      - "80"
+    volumes:
+      - ./demo:/usr/share/nginx/html:ro
+
+  console:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "${CONSOLE_PORT:-8090}:80"
+    volumes:
+      - ./console:/usr/share/nginx/html:ro

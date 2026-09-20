@@ -1,0 +1,28 @@
+[Unit]
+Description=Ma-WAF Management API
+After=network.target nginx.service
+Wants=nginx.service
+
+[Service]
+Type=simple
+# 生产可改为 User=waf-mgr；若遇权限/NAMESPACE 问题可先用 root 跑通
+User=root
+Group=root
+WorkingDirectory=/usr/local/Ma-waf
+Environment=MA_WAF_API_CONFIG=/usr/local/Ma-waf/conf/api.yaml
+Environment=MA_WAF_CONSOLE_DIR=/usr/local/Ma-waf/share/console
+Environment=MA_WAF_ROOT=/usr/local/Ma-waf
+# 生产建议 1；无 bcrypt 时请在 override 设 0
+Environment=MA_WAF_STRICT_AUTH=0
+Environment=MA_WAF_INTEGRITY_CHECK=0
+ExecStart=/usr/local/Ma-waf/bin/ma-waf-api
+Restart=on-failure
+RestartSec=2
+# 沙箱默认关闭：ProtectSystem=strict 在路径缺失时会 226/NAMESPACE
+# 稳定后再按需加回 NoNewPrivileges / ProtectSystem
+PrivateTmp=true
+MemoryMax=512M
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

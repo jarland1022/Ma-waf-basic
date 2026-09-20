@@ -1,0 +1,98 @@
+# 基于官方 CRS Nginx 模板，增加社区版限速与拦截页。
+# 占位符由镜像入口脚本处理，请保持与上游一致。
+
+server_tokens ${SERVER_TOKENS};
+
+more_set_headers 'Server: ${SERVER_HEADER}';
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+server {
+    listen ${PORT} default_server;
+    server_name ${SERVER_NAME};
+    set $always_redirect ${NGINX_ALWAYS_TLS_REDIRECT};
+
+    error_page 403 /ma-waf-block.html;
+
+    PROXY_SSL_CONFIG
+
+    location = /ma-waf-block.html {
+        internal;
+        modsecurity off;
+        alias /opt/ma-waf/error-pages/ma-waf-block.html;
+        default_type text/html;
+        add_header X-Request-ID $request_id always;
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        client_max_body_size 0;
+        limit_req zone=ma_community burst=40 nodelay;
+
+        if ($always_redirect = on) {
+            return 301 https://$host$request_uri;
+        }
+
+        include includes/cors.conf;
+        include includes/proxy_backend.conf;
+
+        index index.html index.htm;
+        root /usr/share/nginx/html;
+    }
+
+    include includes/location_common.conf;
+}
+
+server {
+    listen ${SSL_PORT} ssl;
+    HTTP3_CONFIG
+
+    server_name ${SERVER_NAME};
+
+    ssl_certificate     ${SSL_CERT_FILE};
+    ssl_certificate_key ${SSL_CERT_KEY_FILE};
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:MozSSL:10m;
+    ssl_session_tickets off;
+
+    ssl_dhparam /etc/ssl/certs/dhparam-${SSL_DH_BITS}.pem;
+
+    ssl_protocols ${SSL_PROTOCOLS};
+    ssl_ciphers ${SSL_CIPHERS};
+    ssl_prefer_server_ciphers ${SSL_PREFER_CIPHERS};
+
+    ssl_stapling ${SSL_OCSP_STAPLING};
+    ssl_stapling_verify ${SSL_OCSP_STAPLING};
+
+    ssl_verify_client ${SSL_VERIFY};
+    ssl_verify_depth ${SSL_VERIFY_DEPTH};
+
+    error_page 403 /ma-waf-block.html;
+
+    PROXY_SSL_CONFIG
+
+    location = /ma-waf-block.html {
+        internal;
+        modsecurity off;
+        alias /opt/ma-waf/error-pages/ma-waf-block.html;
+        default_type text/html;
+        add_header X-Request-ID $request_id always;
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        client_max_body_size 0;
+        limit_req zone=ma_community burst=40 nodelay;
+
+        include includes/cors.conf;
+        include includes/proxy_backend.conf;
+
+        index index.html index.htm;
+        root /usr/share/nginx/html;
+    }
+
+    include includes/location_common.conf;
+}

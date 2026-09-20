@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Ma-WAF Professional — 专业版</title>
+  <link rel="stylesheet" href="assets/site.css"/>
+</head>
+<body>
+  <div class="shell">
+    <header class="hs-header">
+      <div class="hs-brand">
+        <span class="hs-logo">Ma-WAF</span>
+        <span class="hs-model">Professional</span>
+      </div>
+      <div class="hs-header-right">
+        <a class="hs-link" href="home.html">社区控制台</a>
+        <a class="hs-link" href="trial.html" data-pro-contact data-pro-label>申请 14 天专业版试用</a>
+      </div>
+    </header>
+    <main class="hs-main">
+      <section class="hero">
+        <div class="kicker">Commercial edition</div>
+        <h1>同一套防护思路，补上生产环境缺的管控、联动和支持。</h1>
+        <p class="lead">社区版解决「有没有防护」。专业版解决多站点运维、情报封禁、安全设备对接、审计材料，以及出问题时有人响应。</p>
+      </section>
+      <section class="price">
+        <div>专业版参考价</div>
+        <div><b data-pro-price>¥4,980</b> / 节点 / 年</div>
+        <p>含 1 个生产节点授权、专业版功能、工作日支持，以及规则与情报更新通道。价格以合同为准。</p>
+        <a class="btn primary" href="trial.html" data-pro-contact data-pro-label>申请 14 天专业版试用</a>
+      </section>
+      <h2>试用怎么走</h2>
+      <div class="grid">
+        <article class="card"><h3>1. 提交申请</h3><p>在 <a href="trial.html">试用申请页</a> 填写公司、联系人与需求，不会跳到空白页。</p></article>
+        <article class="card"><h3>2. 领取授权</h3><p>我们签发 <span data-trial-days>14</span> 天专业版试用许可。社区仓库不包含签发私钥。</p></article>
+        <article class="card"><h3>3. 到期转年费</h3><p>试用结束前确认节点数量。单节点年费约 <span data-pro-price>¥4,980</span>。</p></article>
+      </div>
+      <h2>能力对照</h2>
+      <table>
+        <thead><tr><th>能力</th><th>社区版（本仓库）</th><th>专业版</th></tr></thead>
+        <tbody>
+          <tr><td>反向代理 + OWASP CRS</td><td class="yes">Docker 单站点</td><td class="yes">多站点控制台</td></tr>
+          <tr><td>扫描器 UA / 基础限速 / 手工 IP 黑名单</td><td class="yes">包含</td><td class="yes">含控制台与自动封禁</td></tr>
+          <tr><td>威胁情报、地理封锁、虚拟补丁</td><td class="no">不含</td><td class="yes">包含</td></tr>
+          <tr><td>SIEM、合规映射报表、商用支持</td><td class="no">不含</td><td class="yes">包含</td></tr>
+          <tr><td>费用</td><td class="yes">免费</td><td class="yes"><span data-pro-price>¥4,980</span> / 节点 / 年</td></tr>
+        </tbody>
+      </table>
+      <h2>专业版不承诺的事</h2>
+      <article class="card">
+        <p>不提供 L3/L4 流量清洗。合规报表只做控制项映射，不能替代等保测评。高可用需自备双机，专业版提供示例与状态。</p>
+      </article>
+    </main>
+    <footer class="page-foot">试用请走 <a href="trial.html">申请页</a>。销售邮箱见 <code>console/config.js</code> 中的 <code>salesEmail</code>。</footer>
+  </div>
+  <script src="config.js"></script>
+  <script src="assets/site.js"></script>
+</body>
+</html>

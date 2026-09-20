@@ -1,0 +1,3 @@
+# 品牌显示名：当前 Nginx 未强制依赖 sub_filter，页面内已写死 Ma-WAF。
+# 若自行编译 ngx_http_sub_module，可将错误页改回 __BRAND__ 占位并由配置注入。
+Ma-WAF

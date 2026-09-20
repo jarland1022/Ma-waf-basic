@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Ma-WAF Community — 开源 Web 应用防火墙</title>
+  <link rel="stylesheet" href="assets/site.css"/>
+</head>
+<body>
+  <div class="shell">
+    <header class="hs-header">
+      <div class="hs-brand">
+        <span class="hs-logo">Ma-WAF</span>
+        <span class="hs-model">Community</span>
+      </div>
+      <div class="hs-header-right">
+        <span class="hs-chip">试用演示</span>
+        <a class="hs-link" href="pro.html">专业版</a>
+        <a class="hs-link" href="trial.html" data-pro-contact data-pro-label>申请 14 天专业版试用</a>
+        <button type="button" class="hs-link" id="logoutBtn">退出</button>
+      </div>
+    </header>
+    <main class="hs-main">
+      <section class="hero">
+        <div class="kicker">Open source WAF</div>
+        <h1>把站点放到防火墙后面，几分钟就能拦截常见 Web 攻击。</h1>
+        <p class="lead">Ma-WAF Community 是基于 Nginx、ModSecurity 与 OWASP CRS 的自托管反向代理。社区版永久免费；生产多站点、情报联动与商用支持在专业版。</p>
+        <div class="actions">
+          <a class="btn primary" href="trial.html" data-pro-contact data-pro-label>申请 14 天专业版试用</a>
+          <a class="btn" href="pro.html">查看专业版与价格</a>
+          <a class="btn" id="demoLink" href="http://127.0.0.1:18080/">打开防护演示站</a>
+        </div>
+      </section>
+      <section class="grid">
+        <article class="card">
+          <h2>1. 启动</h2>
+          <p>仓库根目录执行 <code>docker compose up -d</code>。本控制台默认 <code>:8090</code>，防护入口见 <code>.env</code> 中的 <code>WAF_HTTP_PORT</code>。</p>
+        </article>
+        <article class="card">
+          <h2>2. 验证拦截</h2>
+          <p>打开演示站，点击 XSS / SQL 注入测试。引擎为 On 时应返回 403，并看到 Ma-WAF 拦截页。</p>
+        </article>
+        <article class="card">
+          <h2>3. 接到你的业务</h2>
+          <p>修改 <code>docker-compose.yml</code> 的 <code>BACKEND</code>。上线初期可把 <code>MODSEC_RULE_ENGINE</code> 设为 DetectionOnly。</p>
+        </article>
+      </section>
+      <h2>社区版已经包含</h2>
+      <div class="grid">
+        <article class="card"><h3>OWASP CRS</h3><p>SQL 注入、XSS、命令注入、路径遍历等常见 Web 攻击检测与拦截。</p></article>
+        <article class="card"><h3>扫描器封禁</h3><p>拦截 sqlmap、nikto、acunetix 等已知扫描器 User-Agent。</p></article>
+        <article class="card"><h3>基础限速</h3><p>按源 IP 限制请求速率，减轻简单的应用层刷接口。</p></article>
+      </div>
+      <h2>和专业版的差别</h2>
+      <table>
+        <thead><tr><th>能力</th><th>社区版</th><th>专业版</th></tr></thead>
+        <tbody>
+          <tr><td>单站点反向代理 + CRS</td><td class="yes">包含</td><td class="yes">包含</td></tr>
+          <tr><td>多站点控制台、策略模板</td><td class="no">不含</td><td class="yes">包含</td></tr>
+          <tr><td>威胁情报、自动封禁、地理封锁</td><td class="no">不含</td><td class="yes">包含</td></tr>
+          <tr><td>SIEM、合规报表、商用支持</td><td class="no">不含</td><td class="yes">包含</td></tr>
+        </tbody>
+      </table>
+      <p>完整对照见 <a href="pro.html">专业版</a>。参考价 <span data-pro-price>¥4,980</span> / 节点 / 年。</p>
+    </main>
+    <footer class="page-foot">Ma-WAF Community 采用 Apache-2.0。专业版为商业授权，不在本仓库提供。</footer>
+  </div>
+  <script src="config.js"></script>
+  <script src="assets/site.js"></script>
+  <script>
+    if (!MaWafAuth.requireAuth()) { /* redirect */ }
+    else {
+      document.getElementById("logoutBtn").onclick = function () { MaWafAuth.logout(); };
+      var port = (location.port === "8090") ? "18080" : "8080";
+      document.getElementById("demoLink").href = location.protocol + "//" + location.hostname + ":" + port + "/";
+    }
+  </script>
+</body>
+</html>

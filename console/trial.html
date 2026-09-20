@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>申请 14 天专业版试用 — Ma-WAF</title>
+  <link rel="stylesheet" href="assets/site.css"/>
+</head>
+<body>
+  <div class="shell">
+    <header class="hs-header">
+      <div class="hs-brand">
+        <span class="hs-logo">Ma-WAF</span>
+        <span class="hs-model">Professional Trial</span>
+      </div>
+      <div class="hs-header-right">
+        <a class="hs-link" href="pro.html">返回专业版介绍</a>
+        <a class="hs-link" href="home.html">控制台</a>
+      </div>
+    </header>
+    <main class="hs-main">
+      <section class="hero">
+        <div class="kicker">14-day trial</div>
+        <h1>申请专业版试用</h1>
+        <p class="lead">填写下面信息后，可生成本地申请单并打开邮件草稿发给我们。即使本机没有邮件客户端，申请内容也会保留在本页，不会出现空白页。</p>
+      </section>
+      <form class="form-card" id="trialForm">
+        <label for="company">公司 / 团队</label>
+        <input id="company" name="company" required placeholder="例如：某某科技有限公司" />
+        <label for="contact">联系人</label>
+        <input id="contact" name="contact" required placeholder="姓名" />
+        <label for="email">邮箱</label>
+        <input id="email" name="email" type="email" required placeholder="you@company.com" />
+        <label for="phone">电话（可选）</label>
+        <input id="phone" name="phone" placeholder="手机或座机" />
+        <label for="nodes">预计节点数</label>
+        <select id="nodes" name="nodes">
+          <option value="1">1 节点</option>
+          <option value="2">2 节点</option>
+          <option value="3+">3 节点及以上</option>
+        </select>
+        <label for="need">主要需求</label>
+        <textarea id="need" name="need" placeholder="例如：多站点、威胁情报、SIEM、等保材料、上线时间…"></textarea>
+        <div class="form-actions">
+          <button type="submit">提交试用申请</button>
+          <a class="btn" href="pro.html">返回</a>
+        </div>
+        <p class="form-note">销售邮箱：<span data-sales-email>jarland@mingansec.com</span>。参考价 <span data-pro-price>¥4,980</span> / 节点 / 年，试用 <span data-trial-days>14</span> 天。</p>
+        <div class="msg err" id="trialErr"></div>
+        <div class="msg ok" id="trialOk" hidden></div>
+      </form>
+      <pre id="trialPreview" class="card" hidden style="white-space:pre-wrap;margin-top:1rem;color:var(--text);"></pre>
+    </main>
+  </div>
+  <script src="config.js"></script>
+  <script src="assets/site.js"></script>
+  <script>
+    (function () {
+      var form = document.getElementById("trialForm");
+      var err = document.getElementById("trialErr");
+      var ok = document.getElementById("trialOk");
+      var preview = document.getElementById("trialPreview");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        err.textContent = "";
+        ok.hidden = true;
+        var data = {
+          company: document.getElementById("company").value.trim(),
+          contact: document.getElementById("contact").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          nodes: document.getElementById("nodes").value,
+          need: document.getElementById("need").value.trim(),
+          at: new Date().toISOString()
+        };
+        var body = [
+          "Ma-WAF Professional 14 天试用申请",
+          "公司/团队: " + data.company,
+          "联系人: " + data.contact,
+          "邮箱: " + data.email,
+          "电话: " + (data.phone || "-"),
+          "节点数: " + data.nodes,
+          "需求: " + (data.need || "-"),
+          "提交时间: " + data.at
+        ].join("\n");
+        try {
+          localStorage.setItem("ma_waf_trial_request", JSON.stringify(data));
+        } catch (ex) {}
+        preview.hidden = false;
+        preview.textContent = body;
+        ok.hidden = false;
+        ok.textContent = "申请已保存在本机。若系统已配置邮件客户端，将尝试打开邮件草稿；否则请直接复制下方内容发送至销售邮箱。";
+        var to = (window.MA_WAF && MA_WAF.salesEmail) || "jarland@mingansec.com";
+        var mailto = "mailto:" + encodeURIComponent(to) +
+          "?subject=" + encodeURIComponent("Ma-WAF Professional 14天试用申请 - " + data.company) +
+          "&body=" + encodeURIComponent(body);
+        /* 延后打开，避免部分浏览器在跳转邮件时清空当前页观感 */
+        setTimeout(function () {
+          var a = document.createElement("a");
+          a.href = mailto;
+          a.rel = "noopener";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }, 50);
+      });
+    })();
+  </script>
+</body>
+</html>

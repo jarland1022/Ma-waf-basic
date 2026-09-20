@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Ma-WAF Community 演示站点</title>
+  <style>
+    body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; margin: 2rem auto; max-width: 640px; line-height: 1.6; color: #142033; }
+    a.hit { display: inline-block; margin: .4rem .6rem .4rem 0; padding: .45rem .8rem; border-radius: 999px; background: #123; color: #fff; text-decoration: none; }
+    code { background: #f3f6fa; padding: .1rem .3rem; }
+  </style>
+</head>
+<body>
+  <h1>演示业务（在 WAF 后面）</h1>
+  <p>这是一个静态页面，不会执行你提交的脚本。下面两个链接会发出典型攻击请求，社区版引擎为 <code>On</code> 时应被拦截。</p>
+  <p>
+    <a class="hit" href="/?q=%3Cscript%3Ealert(1)%3C/script%3E">测试 XSS</a>
+    <a class="hit" href="/?id=1%27%20OR%20%271%27=%271">测试 SQL 注入</a>
+  </p>
+  <p>正常访问本页应返回 200。扫描器测试可在主机执行：<code>curl -A sqlmap http://127.0.0.1:8080/</code></p>
+  <p>社区控制台（专业版介绍）默认在宿主机 <code>8090</code> 端口，不经过这条防护链路。</p>
+</body>
+</html>

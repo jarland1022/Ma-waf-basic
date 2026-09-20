@@ -1,0 +1,3 @@
+count 2
+186:       if (e.network || /网络中断|Failed to fetch|Network interrupted/i.test(String(e.message || ""))) {
+666:         if (e.network || /网络中断|Failed to fetch|Network interrupted/i.test(String(e.message || ""))) {
