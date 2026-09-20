@@ -3,7 +3,9 @@
 > 目标：**开源获客 + 专业版转化 + 企业档扩客单价**。  
 > Community 解决「能装、能防、能看」；Professional 解决「能运维、能联动、能合规」；Enterprise 解决「能集群、能驻场、能签 SLA」。
 
-相关入口：[README 获客与定价](../README.md#定价与订阅) · 能力矩阵原稿 [`capability-matrix.md`](capability-matrix.md)
+相关入口：[README](../README.md) · [`community-vs-pro.md`](community-vs-pro.md)
+
+> 本仓库仅开源 Community。Professional / Enterprise 的安装包与管理端源码不在此仓库。
 
 ---
 

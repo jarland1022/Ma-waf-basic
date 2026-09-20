@@ -1,8 +1,0 @@
-[Unit]
-Description=Ma-WAF resource alert check
-After=network.target
-
-[Service]
-Type=oneshot
-Environment=MA_WAF_PREFIX=/usr/local/Ma-waf
-ExecStart=/usr/local/Ma-waf/scripts/alert_check.sh

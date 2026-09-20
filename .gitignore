@@ -6,14 +6,7 @@ Thumbs.db
 *.pem
 *.lic
 **/*private*
-bin/
-management/backend/bin/
-management/frontend/node_modules/
-management/frontend/dist/
-conf/api.yaml
-conf/tls/
-conf/license/
-data/
-*.exe
 .idea/
 .vscode/
+*.exe
+data/
