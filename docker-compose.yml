@@ -5,8 +5,8 @@ services:
     ports:
       - "${WAF_HTTP_PORT:-8080}:8080"
     environment:
-      BACKEND: http://demo:80
-      SERVER_NAME: localhost
+      BACKEND: ${BACKEND:-http://demo:80}
+      SERVER_NAME: ${SERVER_NAME:-localhost}
       PORT: "8080"
       MODSEC_RULE_ENGINE: ${MODSEC_RULE_ENGINE:-On}
       BLOCKING_PARANOIA: "1"
@@ -14,11 +14,16 @@ services:
       ANOMALY_INBOUND: "5"
       ANOMALY_OUTBOUND: "4"
       SERVER_TOKENS: "off"
+      MODSEC_AUDIT_ENGINE: RelevantOnly
+      MODSEC_AUDIT_LOG: /var/log/modsec_audit.log
+      MODSEC_AUDIT_LOG_FORMAT: JSON
+      MODSEC_AUDIT_LOG_TYPE: Serial
     volumes:
       - ./nginx/templates/conf.d/default.conf.template:/etc/nginx/templates/conf.d/default.conf.template
       - ./nginx/templates/conf.d/00-community-limit.conf.template:/etc/nginx/templates/conf.d/00-community-limit.conf.template
       - ./nginx/error-pages:/opt/ma-waf/error-pages:ro
-      - ./rules/REQUEST-900-ma-waf-community.conf:/etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf:ro
+      - ./rules/REQUEST-900-ma-waf-community.conf:/etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+      - ./logs/modsec_audit.log:/var/log/modsec_audit.log
     depends_on:
       - demo
 
@@ -30,6 +35,32 @@ services:
     volumes:
       - ./demo:/usr/share/nginx/html:ro
 
+  api:
+    image: python:3.12-alpine
+    restart: unless-stopped
+    working_dir: /app
+    command: ["python", "app.py"]
+    environment:
+      API_HOST: "0.0.0.0"
+      API_PORT: "8091"
+      AUDIT_LOG: /logs/modsec_audit.log
+      RULES_FILE: /rules/REQUEST-900-ma-waf-community.conf
+      DATA_DIR: /data
+      MODSEC_RULE_ENGINE: ${MODSEC_RULE_ENGINE:-On}
+      WAF_PUBLIC_URL: ${WAF_PUBLIC_URL:-http://127.0.0.1:8080}
+      WAF_INTERNAL_URL: http://waf:8080
+      DEMO_USER: ${DEMO_USER:-admin}
+      DEMO_PASS: ${DEMO_PASS:-admin}
+    volumes:
+      - ./community-api:/app:ro
+      - ./logs:/logs
+      - ./rules:/rules
+      - ./data:/data
+    expose:
+      - "8091"
+    depends_on:
+      - waf
+
   console:
     image: nginx:alpine
     restart: unless-stopped
@@ -37,3 +68,6 @@ services:
       - "${CONSOLE_PORT:-8090}:80"
     volumes:
       - ./console:/usr/share/nginx/html:ro
+      - ./console/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>安装说明 — Ma-WAF Community</title>
+  <link rel="stylesheet" href="assets/site.css"/>
+</head>
+<body>
+  <div class="shell">
+    <header class="hs-header">
+      <div class="hs-brand">
+        <span class="hs-logo">Ma-WAF</span>
+        <span class="hs-model">Install</span>
+      </div>
+      <div class="hs-header-right">
+        <a class="hs-link" href="home.html">总览</a>
+        <a class="hs-link" href="pro.html">专业版</a>
+      </div>
+    </header>
+    <main class="hs-main">
+      <section class="hero">
+        <div class="kicker">Self-host install</div>
+        <h1>自己安装社区版，马上形成防护。</h1>
+        <p class="lead">只需 Docker。安装后流量经 WAF 再到你的网站；控制台可看拦截事件并维护 IP 黑名单。</p>
+      </section>
+      <h2>1. 安装</h2>
+      <article class="card">
+        <p><b>Windows</b></p>
+        <p><code>powershell -File scripts\install.ps1</code></p>
+        <p><b>Linux / macOS</b></p>
+        <p><code>sh scripts/install.sh</code></p>
+        <p>或手动：复制 <code>.env.example</code> 为 <code>.env</code>，确保 <code>logs/modsec_audit.log</code> 是文件，再 <code>docker compose up -d</code>。</p>
+      </article>
+      <h2>2. 验证效果</h2>
+      <article class="card">
+        <ol>
+          <li>打开控制台登录（默认 admin / admin）。</li>
+          <li>点「一键验证防护效果」，应看到 XSS / SQLi / 扫描器用例返回 403。</li>
+          <li>下方「最近拦截」表格应出现审计事件。</li>
+          <li>也可运行 <code>scripts/smoke-test.ps1</code> / <code>smoke-test.sh</code>。</li>
+        </ol>
+      </article>
+      <h2>3. 保护真实业务</h2>
+      <article class="card">
+        <p>编辑 <code>.env</code>：</p>
+        <p><code>BACKEND=http://你的应用主机:端口</code></p>
+        <p><code>WAF_PUBLIC_URL=http://服务器IP:8080</code></p>
+        <p>然后 <code>docker compose up -d</code>。把域名 / 负载均衡指到 WAF 端口，而不是直连应用。</p>
+        <p>上线初期可设 <code>MODSEC_RULE_ENGINE=DetectionOnly</code> 只观察不拦截，确认误报后再改回 <code>On</code>。</p>
+      </article>
+      <h2>社区版边界</h2>
+      <article class="card">
+        <p>包含：CRS、扫描器 UA、限速、IP 黑名单、事件总览。</p>
+        <p>不含：多站点控制台、威胁情报、地理封锁、SIEM、合规报表、虚拟补丁升级——见 <a href="pro.html">专业版</a>。</p>
+      </article>
+    </main>
+  </div>
+  <script src="config.js"></script>
+  <script src="assets/site.js"></script>
+</body>
+</html>

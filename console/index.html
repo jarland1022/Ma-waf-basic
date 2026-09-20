@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>登录 — Ma-WAF 试用演示</title>
+  <title>登录 — Ma-WAF Community</title>
   <link rel="stylesheet" href="assets/site.css"/>
 </head>
 <body class="auth-login">
@@ -13,43 +13,41 @@
         <div class="brand-mark" aria-hidden="true">Ma</div>
         <div>
           <h1>Ma-WAF</h1>
-          <p>企业级 Web 应用防火墙</p>
-          <span class="badge-trial">Community 试用演示</span>
+          <p>社区版控制台</p>
+          <span class="badge-trial">Community</span>
         </div>
       </div>
       <label for="user">用户名</label>
       <input id="user" name="username" value="admin" autocomplete="username" />
       <label for="pass">密码</label>
-      <input id="pass" name="password" type="password" value=""
-        placeholder="默认 admin（与专业版一致）" autocomplete="current-password" />
-      <label for="totp">TOTP（可选）</label>
-      <input id="totp" name="totp" placeholder="未启用双因素可留空" autocomplete="one-time-code" />
+      <input id="pass" name="password" type="password"
+        placeholder="默认 admin" autocomplete="current-password" />
       <button type="submit">登录</button>
       <div class="msg err" id="loginErr"></div>
-      <p class="login-hint">试用演示账号：<code>admin</code> / <code>admin</code>（与专业版默认相同）。文档中的 “change” 是指上线后请修改密码，不是密码本身。</p>
+      <p class="login-hint">安装后默认 <code>admin</code> / <code>admin</code>。登录后可查看拦截事件、维护 IP 黑名单，并把流量接到你的业务。</p>
     </form>
   </div>
   <script src="config.js"></script>
   <script src="assets/site.js"></script>
   <script>
     (function () {
-      if (window.MaWafAuth && MaWafAuth.isAuthed()) {
+      if (MaWafAuth.isAuthed()) {
         location.replace("home.html");
         return;
       }
-      document.getElementById("loginForm").addEventListener("submit", function (e) {
+      document.getElementById("loginForm").addEventListener("submit", async function (e) {
         e.preventDefault();
         var err = document.getElementById("loginErr");
         err.textContent = "";
-        var result = MaWafAuth.login(
-          document.getElementById("user").value,
-          document.getElementById("pass").value
-        );
-        if (!result.ok) {
-          err.textContent = result.message;
-          return;
+        try {
+          await MaWafAuth.login(
+            document.getElementById("user").value,
+            document.getElementById("pass").value
+          );
+          location.href = "home.html";
+        } catch (ex) {
+          err.textContent = ex.message || String(ex);
         }
-        location.href = "home.html";
       });
     })();
   </script>

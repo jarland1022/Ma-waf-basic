@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Ma-WAF Community — 开源 Web 应用防火墙</title>
+  <title>总览 — Ma-WAF Community</title>
   <link rel="stylesheet" href="assets/site.css"/>
 </head>
 <body>
@@ -14,56 +14,83 @@
         <span class="hs-model">Community</span>
       </div>
       <div class="hs-header-right">
-        <span class="hs-chip">试用演示</span>
+        <span class="hs-chip" id="engineChip">引擎: -</span>
+        <a class="hs-link" href="home.html">总览</a>
         <a class="hs-link" href="pro.html">专业版</a>
-        <a class="hs-link" href="trial.html" data-pro-contact data-pro-label>申请 14 天专业版试用</a>
+        <a class="hs-link" href="trial.html" data-pro-contact data-pro-label>升级专业版</a>
         <button type="button" class="hs-link" id="logoutBtn">退出</button>
       </div>
     </header>
     <main class="hs-main">
       <section class="hero">
-        <div class="kicker">Open source WAF</div>
-        <h1>把站点放到防火墙后面，几分钟就能拦截常见 Web 攻击。</h1>
-        <p class="lead">Ma-WAF Community 是基于 Nginx、ModSecurity 与 OWASP CRS 的自托管反向代理。社区版永久免费；生产多站点、情报联动与商用支持在专业版。</p>
+        <div class="kicker">Installed community WAF</div>
+        <h1>防护已运行。这里能看到拦截效果。</h1>
+        <p class="lead">社区版提供单站点 CRS 防护、扫描器拦截、限速、IP 黑名单与事件总览。多站点、威胁情报、地理封锁、SIEM、合规报表属于专业版。</p>
         <div class="actions">
-          <a class="btn primary" href="trial.html" data-pro-contact data-pro-label>申请 14 天专业版试用</a>
-          <a class="btn" href="pro.html">查看专业版与价格</a>
-          <a class="btn" id="demoLink" href="http://127.0.0.1:18080/">打开防护演示站</a>
+          <a class="btn primary" id="wafLink" href="#" target="_blank" rel="noopener">打开防护入口</a>
+          <button type="button" class="btn" id="btnSelfTest">一键验证防护效果</button>
+          <button type="button" class="btn" id="btnRefresh">刷新事件</button>
+          <a class="btn" href="install.html">安装 / 接到业务</a>
         </div>
+        <p class="form-note" id="testHint">点「一键验证」会由服务器向 WAF 发送正常请求、XSS、SQL 注入与扫描器 UA，结果会出现在下方事件表。</p>
       </section>
-      <section class="grid">
-        <article class="card">
-          <h2>1. 启动</h2>
-          <p>仓库根目录执行 <code>docker compose up -d</code>。本控制台默认 <code>:8090</code>，防护入口见 <code>.env</code> 中的 <code>WAF_HTTP_PORT</code>。</p>
-        </article>
-        <article class="card">
-          <h2>2. 验证拦截</h2>
-          <p>打开演示站，点击 XSS / SQL 注入测试。引擎为 On 时应返回 403，并看到 Ma-WAF 拦截页。</p>
-        </article>
-        <article class="card">
-          <h2>3. 接到你的业务</h2>
-          <p>修改 <code>docker-compose.yml</code> 的 <code>BACKEND</code>。上线初期可把 <code>MODSEC_RULE_ENGINE</code> 设为 DetectionOnly。</p>
-        </article>
-      </section>
-      <h2>社区版已经包含</h2>
-      <div class="grid">
-        <article class="card"><h3>OWASP CRS</h3><p>SQL 注入、XSS、命令注入、路径遍历等常见 Web 攻击检测与拦截。</p></article>
-        <article class="card"><h3>扫描器封禁</h3><p>拦截 sqlmap、nikto、acunetix 等已知扫描器 User-Agent。</p></article>
-        <article class="card"><h3>基础限速</h3><p>按源 IP 限制请求速率，减轻简单的应用层刷接口。</p></article>
+
+      <div class="grid kpi-grid">
+        <article class="card"><h3>近期事件</h3><p class="kpi" id="kpiEvents">-</p></article>
+        <article class="card"><h3>引擎模式</h3><p class="kpi" id="kpiEngine">-</p></article>
+        <article class="card"><h3>审计日志</h3><p class="kpi" id="kpiLog">-</p></article>
       </div>
-      <h2>和专业版的差别</h2>
-      <table>
-        <thead><tr><th>能力</th><th>社区版</th><th>专业版</th></tr></thead>
-        <tbody>
-          <tr><td>单站点反向代理 + CRS</td><td class="yes">包含</td><td class="yes">包含</td></tr>
-          <tr><td>多站点控制台、策略模板</td><td class="no">不含</td><td class="yes">包含</td></tr>
-          <tr><td>威胁情报、自动封禁、地理封锁</td><td class="no">不含</td><td class="yes">包含</td></tr>
-          <tr><td>SIEM、合规报表、商用支持</td><td class="no">不含</td><td class="yes">包含</td></tr>
-        </tbody>
-      </table>
-      <p>完整对照见 <a href="pro.html">专业版</a>。参考价 <span data-pro-price>¥4,980</span> / 节点 / 年。</p>
+
+      <h2>最近拦截 / 检测</h2>
+      <div class="card table-wrap">
+        <table>
+          <thead>
+            <tr><th>时间</th><th>源 IP</th><th>方法</th><th>URI</th><th>规则</th><th>说明</th></tr>
+          </thead>
+          <tbody id="eventBody">
+            <tr><td colspan="6" class="no">暂无事件。点击上方「试一次」或访问防护入口触发攻击样例。</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>IP 黑名单（社区版）</h2>
+      <form class="form-card" id="ipForm" style="max-width:100%">
+        <label for="ipList">每行一个 IP 或 CIDR</label>
+        <textarea id="ipList" placeholder="203.0.113.10&#10;198.51.100.0/24"></textarea>
+        <div class="form-actions">
+          <button type="submit">保存黑名单</button>
+        </div>
+        <p class="form-note" id="ipHint">保存后需执行 <code>docker compose restart waf</code> 使规则生效。</p>
+      </form>
+
+      <h2>Top 规则 / 源 IP</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>规则命中</h3>
+          <ul id="topRules" class="plain-list"><li class="no">暂无</li></ul>
+        </article>
+        <article class="card">
+          <h3>源 IP</h3>
+          <ul id="topIps" class="plain-list"><li class="no">暂无</li></ul>
+        </article>
+        <article class="card locked">
+          <h3>专业版能力（未包含）</h3>
+          <ul class="plain-list">
+            <li>多站点与策略模板</li>
+            <li>威胁情报 / 自动封禁</li>
+            <li>地理封锁 / Bot JS 挑战</li>
+            <li>SIEM / 合规报表</li>
+          </ul>
+          <a class="btn primary" href="trial.html" data-pro-contact data-pro-label>申请专业版试用</a>
+        </article>
+      </div>
+
+      <h2>接到你的业务</h2>
+      <article class="card">
+        <p>在 <code>.env</code> 中设置 <code>BACKEND=http://你的应用:端口</code>，然后 <code>docker compose up -d</code>。详细步骤见 <a href="install.html">安装说明</a>。</p>
+      </article>
     </main>
-    <footer class="page-foot">Ma-WAF Community 采用 Apache-2.0。专业版为商业授权，不在本仓库提供。</footer>
+    <footer class="page-foot">Ma-WAF Community · Apache-2.0 · 专业版源码不在本仓库</footer>
   </div>
   <script src="config.js"></script>
   <script src="assets/site.js"></script>
@@ -71,8 +98,89 @@
     if (!MaWafAuth.requireAuth()) { /* redirect */ }
     else {
       document.getElementById("logoutBtn").onclick = function () { MaWafAuth.logout(); };
-      var port = (location.port === "8090") ? "18080" : "8080";
-      document.getElementById("demoLink").href = location.protocol + "//" + location.hostname + ":" + port + "/";
+
+      async function loadAll() {
+        var status = await MaWafAuth.api("/api/status");
+        var events = await MaWafAuth.api("/api/events?limit=40");
+        var ips = await MaWafAuth.api("/api/iplist");
+        document.getElementById("kpiEvents").textContent = String(status.event_count || 0);
+        document.getElementById("kpiEngine").textContent = status.engine || "-";
+        document.getElementById("engineChip").textContent = "引擎: " + (status.engine || "-");
+        document.getElementById("kpiLog").textContent = status.audit_log_present
+          ? ((status.audit_log_size || 0) + " B")
+          : "缺失";
+        var wafUrl = status.waf_url || "http://127.0.0.1:8080";
+        document.getElementById("wafLink").href = wafUrl + "/";
+
+        var body = document.getElementById("eventBody");
+        var items = events.items || [];
+        if (!items.length) {
+          body.innerHTML = '<tr><td colspan="6" class="no">暂无事件。点击上方「试一次」生成样例攻击。</td></tr>';
+        } else {
+          body.innerHTML = items.slice().reverse().map(function (e) {
+            return "<tr><td>" + esc(e.time) + "</td><td>" + esc(e.client_ip) + "</td><td>" +
+              esc(e.method) + "</td><td class='uri'>" + esc(e.uri) + "</td><td>" +
+              esc((e.rule_ids || []).join(",")) + "</td><td>" + esc(e.message) + "</td></tr>";
+          }).join("");
+        }
+
+        document.getElementById("ipList").value = (ips.ips || []).join("\n");
+        fillList("topRules", (status.top_rules || []).map(function (r) {
+          return r.id + " · " + r.count;
+        }));
+        fillList("topIps", (status.top_ips || []).map(function (r) {
+          return r.ip + " · " + r.count;
+        }));
+      }
+
+      function fillList(id, rows) {
+        var el = document.getElementById(id);
+        if (!rows.length) {
+          el.innerHTML = '<li class="no">暂无</li>';
+          return;
+        }
+        el.innerHTML = rows.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
+      }
+
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+
+      async function fireSelfTest() {
+        var hint = document.getElementById("testHint");
+        hint.textContent = "正在从服务器侧探测 WAF…";
+        try {
+          var r = await MaWafAuth.api("/api/selftest", { method: "POST", body: {} });
+          var lines = (r.results || []).map(function (x) {
+            return x.name + "=" + x.status + (x.ok ? " ✓" : " ✗(期望" + x.expect + ")");
+          });
+          hint.textContent = (r.ok ? "防护效果正常。 " : "部分用例未达预期。 ") + lines.join(" · ");
+          await loadAll();
+        } catch (e) {
+          hint.textContent = "自检失败：" + (e.message || e);
+        }
+      }
+
+      document.getElementById("btnSelfTest").onclick = fireSelfTest;
+      document.getElementById("btnRefresh").onclick = function () {
+        loadAll().catch(function (e) { alert(e.message || e); });
+      };
+      document.getElementById("ipForm").onsubmit = async function (e) {
+        e.preventDefault();
+        var lines = document.getElementById("ipList").value.split(/\r?\n/);
+        try {
+          var r = await MaWafAuth.api("/api/iplist", { method: "POST", body: { ips: lines } });
+          document.getElementById("ipHint").textContent =
+            (r.hint || "已保存") + " 也可运行: powershell -File scripts\\apply-blacklist.ps1";
+        } catch (ex) {
+          document.getElementById("ipHint").textContent = ex.message || String(ex);
+        }
+      };
+
+      loadAll().catch(function (e) {
+        document.getElementById("testHint").textContent = "API 不可用：" + (e.message || e) + "。请确认已 docker compose up -d。";
+      });
     }
   </script>
 </body>

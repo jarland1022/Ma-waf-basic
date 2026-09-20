@@ -1,19 +1,21 @@
 (function () {
-  var KEY = "ma_waf_community_session";
+  var TOKEN_KEY = "ma_waf_community_token";
 
   function cfg() {
     return window.MA_WAF || {};
   }
 
+  function token() {
+    return sessionStorage.getItem(TOKEN_KEY) || "";
+  }
+
+  function setToken(t) {
+    if (t) sessionStorage.setItem(TOKEN_KEY, t);
+    else sessionStorage.removeItem(TOKEN_KEY);
+  }
+
   function isAuthed() {
-    try {
-      var raw = sessionStorage.getItem(KEY);
-      if (!raw) return false;
-      var s = JSON.parse(raw);
-      return !!(s && s.user && s.at);
-    } catch (e) {
-      return false;
-    }
+    return !!token();
   }
 
   function requireAuth() {
@@ -25,28 +27,41 @@
   }
 
   function logout() {
-    sessionStorage.removeItem(KEY);
+    setToken("");
     location.replace("index.html");
   }
 
-  function login(user, pass) {
-    var c = cfg();
-    var u = (c.demoUser || "admin").toLowerCase();
-    var p = c.demoPass || "admin";
-    var userOk = String(user || "").trim().toLowerCase() === u;
-    /* 兼容误把文档里的 “change the password” 当成密码 */
-    var passOk = pass === p || pass === "change";
-    if (!userOk || !passOk) {
-      return {
-        ok: false,
-        message: "用户名或密码错误。试用演示账号为 admin / admin（与专业版默认一致）。"
-      };
+  async function api(path, options) {
+    options = options || {};
+    var headers = Object.assign({ "Content-Type": "application/json" }, options.headers || {});
+    if (token()) headers.Authorization = "Bearer " + token();
+    var res = await fetch(path, {
+      method: options.method || "GET",
+      headers: headers,
+      body: options.body ? JSON.stringify(options.body) : undefined
+    });
+    var data = null;
+    try {
+      data = await res.json();
+    } catch (e) {
+      data = {};
     }
-    sessionStorage.setItem(
-      KEY,
-      JSON.stringify({ user: u, at: Date.now(), edition: "community-trial" })
-    );
-    return { ok: true };
+    if (!res.ok) {
+      var err = new Error((data && data.error) || res.statusText || "request failed");
+      err.status = res.status;
+      err.data = data;
+      throw err;
+    }
+    return data;
+  }
+
+  async function login(user, pass) {
+    var data = await api("/api/login", {
+      method: "POST",
+      body: { username: user, password: pass }
+    });
+    setToken(data.token);
+    return data;
   }
 
   function fillCommon() {
@@ -75,7 +90,9 @@
     requireAuth: requireAuth,
     login: login,
     logout: logout,
-    fillCommon: fillCommon
+    api: api,
+    fillCommon: fillCommon,
+    token: token
   };
 
   document.addEventListener("DOMContentLoaded", fillCommon);

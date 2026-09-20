@@ -1,5 +1,8 @@
-.env
-logs/
+logs/*
+!logs/.gitkeep
+data/*
+!data/.gitkeep
+data/*.bak
 *.log
 .DS_Store
 Thumbs.db
@@ -9,4 +12,4 @@ Thumbs.db
 .idea/
 .vscode/
 *.exe
-data/
+.env
