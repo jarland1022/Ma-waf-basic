@@ -48,6 +48,7 @@
         <p><code>WAF_PUBLIC_URL=http://服务器IP:8080</code></p>
         <p>然后 <code>docker compose up -d</code>。把域名 / 负载均衡指到 WAF 端口，而不是直连应用。</p>
         <p>上线初期可设 <code>MODSEC_RULE_ENGINE=DetectionOnly</code> 只观察不拦截，确认误报后再改回 <code>On</code>。</p>
+        <p><b>注意：</b>本机试用请保持 <code>BACKEND=http://demo:80</code>。若改成 <code>https://公网站点</code> 却未配置 <code>PROXY_SSL=on</code>，防护入口会出现 Nginx 502 错误页。</p>
       </article>
       <h2>社区版边界</h2>
       <article class="card">
