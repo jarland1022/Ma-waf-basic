@@ -1,5 +1,8 @@
-# 基于官方 CRS Nginx 模板，增加社区版限速与拦截页。
-# 占位符由镜像入口脚本处理，请保持与上游一致。
+# 基于官方 CRS Nginx 模板，增加社区版限速、拦截页，以及 HTTP/HTTPS 上游。
+# UPSTREAM_SSL_SNI / UPSTREAM_SSL_NAME 由 .env 注入：
+#   HTTP 源站：UPSTREAM_SSL_SNI=off
+#   HTTPS 源站：UPSTREAM_SSL_SNI=on ，UPSTREAM_SSL_NAME=源站域名
+# 不要用镜像的 PROXY_SSL=on 表示「源站是 HTTPS」，那个开关会启用客户端证书。
 
 server_tokens ${SERVER_TOKENS};
 
@@ -38,6 +41,8 @@ server {
 
         include includes/cors.conf;
         include includes/proxy_backend.conf;
+        proxy_ssl_server_name ${UPSTREAM_SSL_SNI};
+        proxy_ssl_name ${UPSTREAM_SSL_NAME};
 
         index index.html index.htm;
         root /usr/share/nginx/html;
@@ -89,6 +94,8 @@ server {
 
         include includes/cors.conf;
         include includes/proxy_backend.conf;
+        proxy_ssl_server_name ${UPSTREAM_SSL_SNI};
+        proxy_ssl_name ${UPSTREAM_SSL_NAME};
 
         index index.html index.htm;
         root /usr/share/nginx/html;
