@@ -2,7 +2,7 @@
 
 自托管 Web 应用防火墙的**开源社区版**。用 Docker 自己安装后，流量经 **Nginx + ModSecurity + OWASP CRS** 再到达你的网站：能拦截攻击，也能在控制台看到效果。
 
-专业版（多站点、威胁情报、SIEM、合规等）**不在本仓库**，约 **¥4,980 / 节点 / 年**。对照：[`docs/community-vs-pro.md`](docs/community-vs-pro.md)。
+专业版（多站点、威胁情报、SIEM、合规等）**不在本仓库**，试用期间可与版主沟通价格 / 节点 / 年**。对照：[`docs/community-vs-pro.md`](docs/community-vs-pro.md)。
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
@@ -35,7 +35,7 @@ powershell -File scripts/install.ps1
 | 地址 | 作用 |
 |------|------|
 | http://127.0.0.1:8080/ | **防护入口**（默认后面是演示站；改 `BACKEND` 可护你的业务） |
-| http://127.0.0.1:8090/ | **社区控制台**（登录后看拦截、黑名单、试攻击） |
+| http://127.0.0.1:8090/ | **社区控制台**（界面与专业版一致；Pro 菜单可见但点击无反应） |
 
 默认账号：`admin` / `admin`（在 `.env` 的 `DEMO_USER` / `DEMO_PASS` 修改）。
 

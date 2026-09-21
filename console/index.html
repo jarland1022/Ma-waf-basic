@@ -1,55 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>登录 — Ma-WAF Community</title>
-  <link rel="stylesheet" href="assets/site.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ma-WAF 管理控制台</title>
+  <link rel="stylesheet" href="assets/app.css" />
 </head>
 <body class="auth-login">
-  <div class="login-wrap">
+  <div id="loginView" class="login-wrap">
     <form class="login-card" id="loginForm">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">Ma</div>
+        <img class="brand-logo" src="assets/logo.png" width="56" height="56" alt="Ma-WAF"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" />
+        <div class="brand-mark" style="display:none" aria-hidden="true">Ma</div>
         <div>
           <h1>Ma-WAF</h1>
-          <p>社区版控制台</p>
-          <span class="badge-trial">Community</span>
+          <p>企业级 Web 应用防火墙</p>
         </div>
       </div>
-      <label for="user">用户名</label>
-      <input id="user" name="username" value="admin" autocomplete="username" />
-      <label for="pass">密码</label>
-      <input id="pass" name="password" type="password"
-        placeholder="默认 admin" autocomplete="current-password" />
+      <label>用户名</label>
+      <input id="user" value="admin" autocomplete="username" />
+      <label>密码</label>
+      <input id="pass" type="password" autocomplete="current-password" placeholder="默认 admin" />
+      <label>TOTP（可选）</label>
+      <input id="totp" placeholder="未启用双因素可留空" autocomplete="one-time-code" />
       <button type="submit">登录</button>
       <div class="msg err" id="loginErr"></div>
-      <p class="login-hint">安装后默认 <code>admin</code> / <code>admin</code>。登录后可查看拦截事件、维护 IP 黑名单，并把流量接到你的业务。</p>
+      <p class="muted" style="margin-top:.55rem">社区版界面与专业版一致；专业功能菜单可见但不可用。默认账号 admin / admin。</p>
     </form>
   </div>
+
+  <div id="appView" class="shell">
+    <header class="hs-header">
+      <div class="hs-brand">
+        <span class="hs-logo">Ma-WAF</span>
+        <span class="hs-model">Community</span>
+      </div>
+      <nav class="hs-topnav" id="topNav" aria-label="主模块"></nav>
+      <div class="hs-header-right">
+        <span class="hs-chip" id="sideMode">引擎: -</span>
+        <span class="hs-chip">社区版</span>
+        <a class="hs-link" href="trial.html">申请专业版</a>
+        <button type="button" class="hs-link" id="logoutBtn">退出</button>
+      </div>
+    </header>
+
+    <div class="hs-body">
+      <aside class="hs-sidebar">
+        <div class="hs-side-title" id="sideTitle">模块</div>
+        <nav id="nav" class="hs-sidenav" aria-label="子菜单"></nav>
+        <button type="button" class="hs-collapse" id="sideCollapse" title="收起侧栏">收起</button>
+      </aside>
+
+      <main class="hs-main">
+        <div class="hs-crumb" id="pageCrumb">首页 / 总览</div>
+        <header class="topbar">
+          <div>
+            <h2 id="pageTitle">总览</h2>
+            <p id="pageSub" class="muted">攻击态势 · 引擎状态 · 关键指标</p>
+          </div>
+          <div class="top-actions">
+            <button type="button" class="ghost" id="refreshBtn">刷新</button>
+          </div>
+        </header>
+        <div class="msg err" id="appErr"></div>
+        <div class="msg ok" id="appOk"></div>
+        <section id="pageRoot"></section>
+      </main>
+    </div>
+  </div>
+
   <script src="config.js"></script>
-  <script src="assets/site.js"></script>
-  <script>
-    (function () {
-      if (MaWafAuth.isAuthed()) {
-        location.replace("home.html");
-        return;
-      }
-      document.getElementById("loginForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-        var err = document.getElementById("loginErr");
-        err.textContent = "";
-        try {
-          await MaWafAuth.login(
-            document.getElementById("user").value,
-            document.getElementById("pass").value
-          );
-          location.href = "home.html";
-        } catch (ex) {
-          err.textContent = ex.message || String(ex);
-        }
-      });
-    })();
-  </script>
+  <script src="assets/app.js"></script>
 </body>
 </html>
