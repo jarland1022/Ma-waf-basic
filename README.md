@@ -3,6 +3,7 @@
 自托管 Web 应用防火墙的**开源社区版**。用 Docker 自己安装后，流量经 **Nginx + ModSecurity + OWASP CRS** 再到达你的网站：能拦截攻击，也能在控制台看到效果。
 
 专业版（多站点、威胁情报、SIEM、合规等）**不在本仓库**，试用期间可与版主沟通价格 / 节点 / 年**。对照：[`docs/community-vs-pro.md`](docs/community-vs-pro.md)。
+wx:jarlandliu   jarland@mingansec.com
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
