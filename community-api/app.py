@@ -206,6 +206,9 @@ def read_stats() -> dict:
         "engine": ENGINE_MODE,
         "waf_url": WAF_PUBLIC_URL,
         "edition": "community",
+        "forever_free": True,
+        "license": "Apache-2.0",
+        "pricing": "free",
         "audit_log_present": AUDIT_LOG.exists(),
         "audit_log_size": AUDIT_LOG.stat().st_size if AUDIT_LOG.exists() else 0,
     }
@@ -380,6 +383,10 @@ class Handler(BaseHTTPRequestHandler):
                 200,
                 {
                     "edition": "community",
+                    "forever_free": True,
+                    "license": "Apache-2.0",
+                    "pricing": "free",
+                    "message": "Ma-WAF Community is permanently free. No license key or subscription required.",
                     "features": {
                         "crs": True,
                         "scanner_ua_block": True,
@@ -409,7 +416,16 @@ class Handler(BaseHTTPRequestHandler):
             if not ok:
                 return _json(self, 401, {"error": "用户名或密码错误（默认 admin / admin）"})
             token = _issue_token()
-            return _json(self, 200, {"token": token, "edition": "community", "user": DEMO_USER})
+            return _json(
+                self,
+                200,
+                {
+                    "token": token,
+                    "edition": "community",
+                    "forever_free": True,
+                    "user": DEMO_USER,
+                },
+            )
         if path == "/api/iplist":
             if not _authed(self):
                 return _json(self, 401, {"error": "unauthorized"})

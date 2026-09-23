@@ -23,7 +23,7 @@
 
 | 版本 | 标价 | 计量 | 包含 |
 |------|------|------|------|
-| **Community** | **¥0** | 不限 | 本仓库全部开源能力；社区 Issue / Discussion |
+| **Community** | **¥0（永久免费）** | 不限 | 本仓库全部开源能力；社区 Issue / Discussion；无 License、无到期 |
 | **Professional** | **¥4,980 / 节点 / 年** | 按生产 WAF 节点 | 专业版功能 + 工作日 5×8 工单（邮件/企微）+ 规则/情报更新通道 |
 | **Enterprise** | **¥15,800 起 / 年** | 按节点或按项目报价 | Professional 全部能力 + 多节点授权包 + HA 交付协助 + 专属客户经理 + 可选 SLA / 驻场 |
 
@@ -97,7 +97,7 @@
 
 ## 4. Community 能力边界（产品承诺）
 
-Community **永久免费**，并保证以下体验完整可用：
+Community **永久免费**（Apache-2.0），并保证以下体验完整可用：
 
 1. 一键或脚本部署到 Rocky / openEuler（后续补充 Docker）。
 2. CRS 安装后可对常见 SQLi / XSS / 扫描器流量产生拦截或检测日志。
@@ -128,7 +128,7 @@ GitHub / Gitee Star、Docker Pull
 
 **销售话术锚点**
 
-- Community：「先免费把站护起来，误报可 DetectionOnly 观察。」
+- Community：「永久免费，先把站护起来；误报可 DetectionOnly 观察。」
 - Professional：「站点一多、要对接安全设备和出合规材料时，年费通常低于一次外包评估。」
 - Enterprise：「双机热备、重保、对公 SLA，按项目打包比按人天更可控。」
 

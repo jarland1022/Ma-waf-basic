@@ -155,8 +155,8 @@
   function communityBannerHtml() {
     return `
       <div class="community-banner">
-        <h3>当前为 Ma-WAF 社区版</h3>
-        <p class="muted" style="margin:0">本界面布局与专业版一致，便于熟悉产品。社区版<strong>可用</strong>能力如下；带 <span class="pro-tag">Pro</span> 的菜单为专业版功能，点击无反应。</p>
+        <h3>当前为 Ma-WAF 社区版（永久免费）</h3>
+        <p class="muted" style="margin:0">本仓库 Apache-2.0 开源，<strong>永久免费</strong>：无 License、无到期、无节点年费。界面布局与专业版一致，便于熟悉产品。社区版<strong>可用</strong>能力如下；带 <span class="pro-tag">Pro</span> 的菜单为专业版功能，点击无反应。</p>
         <ul>
           <li>单站点反向代理 + OWASP CRS 防护</li>
           <li>总览：引擎状态、事件计数、一键验证拦截效果</li>
@@ -164,7 +164,7 @@
           <li>IP 黑名单：手工维护（国家/Geo 封锁需专业版）</li>
           <li>扫描器 UA 拦截、基础限速</li>
         </ul>
-        <p class="muted" style="margin:0">专业版另含：多站点、策略模板、威胁情报、地理封锁、Bot 挑战、SIEM、合规报表、特征库升级与商用支持。参考价 <b>${esc(priceLabel())}</b> / 节点 / 年。</p>
+        <p class="muted" style="margin:0">专业版另含：多站点、策略模板、威胁情报、地理封锁、Bot 挑战、SIEM、合规报表、特征库升级与商用支持。参考价 <b>${esc(priceLabel())}</b> / 节点 / 年。升级专业版不影响你继续免费使用本社区版。</p>
         <div class="banner-actions">
           <a class="hs-link" style="background:var(--hs-accent);border-color:var(--hs-accent)" href="${esc(trialHref())}">${esc(cfg().contactLabel || "申请 14 天专业版试用")}</a>
           <a class="ghost" href="install.html" style="display:inline-flex;align-items:center;padding:.35rem .7rem;text-decoration:none;border:1px solid var(--line);border-radius:4px;color:var(--text);font-weight:600">安装 / 接到业务</a>
@@ -255,7 +255,7 @@
         <div class="card kpi"><div class="label">近期事件</div><div class="value">${esc(status.event_count || 0)}</div></div>
         <div class="card kpi"><div class="label">引擎模式</div><div class="value">${esc(status.engine || "-")}</div><div class="hint">On=拦截 · DetectionOnly=仅检测</div></div>
         <div class="card kpi"><div class="label">审计日志</div><div class="value" style="font-size:1.1rem">${status.audit_log_present ? esc(status.audit_log_size || 0) + " B" : "缺失"}</div></div>
-        <div class="card kpi"><div class="label">版本</div><div class="value" style="font-size:1.1rem">Community</div><div class="hint">专业功能菜单已展示但锁定</div></div>
+        <div class="card kpi"><div class="label">版本</div><div class="value" style="font-size:1.05rem">Community</div><div class="hint">永久免费 · Pro 菜单已锁定</div></div>
       </div>
       <div class="card" style="margin-top:.75rem">
         <h3>验证防护效果</h3>

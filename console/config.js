@@ -1,5 +1,7 @@
-/* 社区控制台配置。销售邮箱用于试用申请页。 */
+/* 社区控制台配置。Community 永久免费；salesEmail 仅用于专业版试用申请。 */
 window.MA_WAF = {
+  edition: "community",
+  communityForeverFree: true,
   proPriceCny: 4980,
   trialDays: 14,
   contactHref: "trial.html",

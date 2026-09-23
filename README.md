@@ -1,15 +1,17 @@
 # Ma-WAF Community
 
-自托管 Web 应用防火墙的**开源社区版**。用 Docker 自己安装后，流量经 **Nginx + ModSecurity + OWASP CRS** 再到达你的网站：能拦截攻击，也能在控制台看到效果。
+自托管 Web 应用防火墙的**开源社区版，永久免费**（Apache-2.0）。用 Docker 自己安装后，流量经 **Nginx + ModSecurity + OWASP CRS** 再到达你的网站：能拦截攻击，也能在控制台看到效果。无需 License、无到期、无节点年费。
 
-专业版（多站点、威胁情报、SIEM、合规等）**不在本仓库**。联系：微信 `jarlandliu`，邮箱 `jarland@mingansec.com`。对照：[`docs/community-vs-pro.md`](docs/community-vs-pro.md)。
+专业版（多站点、威胁情报、SIEM、合规等）**不在本仓库**，为商业授权。联系：微信 `jarlandliu`，邮箱 `jarland@mingansec.com`。对照：[`docs/community-vs-pro.md`](docs/community-vs-pro.md)。
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+[![Edition](https://img.shields.io/badge/Community-永久免费-brightgreen)](docs/community-vs-pro.md)
 
 ## 社区版能做什么
 
 | 能力 | 说明 |
 |------|------|
+| 费用 | **永久免费**，开源自托管，不收订阅费 |
 | 自己安装 | `scripts/install.sh` / `install.ps1` 或 `docker compose up -d` |
 | 真实防护 | 单站点反向代理 + OWASP CRS |
 | 看到效果 | 控制台事件列表、Top 规则/IP；「一键验证防护效果」 |
@@ -18,7 +20,7 @@
 | IP 黑名单 | 控制台维护后 `scripts/apply-blacklist.*` 或 `docker compose restart waf` |
 | 接到业务 | `.env` 里指定 HTTP 或 HTTPS 源站，见下文 |
 
-**不含（专业版）：** 多站点管控台、威胁情报、地理封锁、Bot JS 挑战、虚拟补丁升级、SIEM、合规报表、商用支持。
+**不含（专业版收费能力）：** 多站点管控台、威胁情报、地理封锁、Bot JS 挑战、虚拟补丁升级、SIEM、合规报表、商用支持。
 
 ## 一键安装
 
@@ -134,4 +136,4 @@ docs/                  # 社区 vs 专业版
 ## 许可
 
 Apache-2.0（本仓库）。运行时镜像与 Nginx / ModSecurity / CRS 见 [NOTICE](NOTICE)。  
-**Ma-WAF Professional 为商业软件，不在此开源。**
+**Ma-WAF Community 永久免费。** Ma-WAF Professional 为商业软件，不在此开源。
