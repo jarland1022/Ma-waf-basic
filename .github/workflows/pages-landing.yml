@@ -30,12 +30,12 @@ jobs:
         env:
           WHATSAPP_URL: ${{ vars.WHATSAPP_URL }}
           CALENDLY_URL: ${{ vars.CALENDLY_URL }}
-          GITHUB_URL: ${{ vars.GITHUB_URL }}
+          GITHUBURL: ${{ vars.GITHUBURL }}
           EMAIL: ${{ vars.EMAIL }}
           COMPANY: ${{ vars.COMPANY }}
         run: |
           missing=0
-          for k in WHATSAPP_URL CALENDLY_URL GITHUB_URL EMAIL COMPANY; do
+          for k in WHATSAPP_URL CALENDLY_URL GITHUBURL EMAIL COMPANY; do
             if [ -z "${!k}" ]; then
               echo "::error::Set repository variable $k on jarland1022/Ma-waf-basic (Settings → Secrets and variables → Actions → Variables)"
               missing=1
@@ -47,7 +47,7 @@ jobs:
         env:
           WHATSAPP_URL: ${{ vars.WHATSAPP_URL }}
           CALENDLY_URL: ${{ vars.CALENDLY_URL }}
-          GITHUB_URL: ${{ vars.GITHUB_URL }}
+          GITHUBURL: ${{ vars.GITHUBURL }}
           EMAIL: ${{ vars.EMAIL }}
           COMPANY: ${{ vars.COMPANY }}
           CNAME: ${{ vars.CNAME }}
@@ -56,7 +56,7 @@ jobs:
           sed \
             -e "s|YOUR_WHATSAPP_URL|${WHATSAPP_URL}|g" \
             -e "s|YOUR_CALENDLY_URL|${CALENDLY_URL}|g" \
-            -e "s|YOUR_GITHUB_URL|${GITHUB_URL}|g" \
+            -e "s|YOUR_GITHUB_URL|${GITHUBURL}|g" \
             -e "s|YOUR_EMAIL|${EMAIL}|g" \
             -e "s|YOUR_COMPANY|${COMPANY}|g" \
             docs/marketing/landing.html > site/index.html

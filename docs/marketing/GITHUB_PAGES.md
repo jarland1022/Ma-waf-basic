@@ -40,13 +40,13 @@ git push origin main
 1. 顶部点 **Settings**  
 2. 左侧 **Secrets and variables** → **Actions**  
 3. 上方点 **Variables**（不是 Secrets）  
-4. **New repository variable**，添加 5 个：
+4. **New repository variable**，添加 5 个（Name 必须与下表完全一致；若界面不允许下划线，用 `GITHUBURL` 而不是 `GITHUB_URL`）：
 
 | Name | Value |
 |------|--------|
 | `WHATSAPP_URL` | `https://wa.me/8613717098262` |
 | `CALENDLY_URL` | `https://calendly.com/leonliu/ma-waf-consult` |
-| `GITHUB_URL` | `https://github.com/jarland1022/Ma-waf-basic` |
+| `GITHUBURL` | `https://github.com/jarland1022/Ma-waf-basic` |
 | `EMAIL` | `jarland@mingansec.com` |
 | `COMPANY` | `Mingansec` |
 
