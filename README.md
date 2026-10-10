@@ -2,7 +2,9 @@
 
 自托管 Web 应用防火墙的**开源社区版，永久免费**（Apache-2.0）。用 Docker 自己安装后，流量经 **Nginx + ModSecurity + OWASP CRS** 再到达你的网站：能拦截攻击，也能在控制台看到效果。无需 License、无到期、无节点年费。
 
-专业版（多站点、威胁情报、SIEM、合规等）**不在本仓库**，为商业授权。联系：微信 `jarlandliu`，邮箱 `jarland@mingansec.com`。对照：[`docs/community-vs-pro.md`](docs/community-vs-pro.md)。
+专业版（多站点、威胁情报、SIEM、合规等）**不在本仓库**，为商业授权。联系：WhatsApp https://wa.me/8613717098262 ，邮箱 `jarland@mingansec.com`。对照：[`docs/community-vs-pro.md`](docs/community-vs-pro.md)。
+
+英文获客落地页（GitHub Pages）：发布说明见 [`docs/marketing/GITHUB_PAGES.md`](docs/marketing/GITHUB_PAGES.md)。上线后一般为 `https://jarland1022.github.io/Ma-waf-basic/`。
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 [![Edition](https://img.shields.io/badge/Community-永久免费-brightgreen)](docs/community-vs-pro.md)
