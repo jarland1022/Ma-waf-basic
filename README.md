@@ -1,32 +1,34 @@
 # Ma-WAF Community
 
-自托管 Web 应用防火墙的**开源社区版，永久免费**（Apache-2.0）。用 Docker 自己安装后，流量经 **Nginx + ModSecurity + OWASP CRS** 再到达你的网站：能拦截攻击，也能在控制台看到效果。无需 License、无到期、无节点年费。
+**English** | [中文](README.zh.md)
 
-专业版（多站点、威胁情报、SIEM、合规等）**不在本仓库**，为商业授权。联系：WhatsApp https://wa.me/8613717098262 ，邮箱 `jarland@mingansec.com`。对照：[`docs/community-vs-pro.md`](docs/community-vs-pro.md)。
+Self-hosted web application firewall. **Free forever** (Apache-2.0). Docker install puts **Nginx + ModSecurity + OWASP CRS** in front of your site: attacks are blocked, and you can see them in the console. No license file, no expiry, no per-node fee.
 
-英文获客落地页（GitHub Pages）：发布说明见 [`docs/marketing/GITHUB_PAGES.md`](docs/marketing/GITHUB_PAGES.md)。上线后一般为 `https://jarland1022.github.io/Ma-waf-basic/`。
+**Professional** (multi-site console, threat intel, SIEM, compliance reports, commercial support) is **not in this repo**. Typed consult (WhatsApp / email preferred): [WhatsApp](https://wa.me/8613717098262) · `jarland@mingansec.com` · [Mingansec](https://jarland1022.github.io/Ma-waf-basic/). Compare editions: [`docs/community-vs-pro.md`](docs/community-vs-pro.md).
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
-[![Edition](https://img.shields.io/badge/Community-永久免费-brightgreen)](docs/community-vs-pro.md)
+[![Edition](https://img.shields.io/badge/Community-free%20forever-brightgreen)](docs/community-vs-pro.md)
 
-## 社区版能做什么
+## What Community includes
 
-| 能力 | 说明 |
-|------|------|
-| 费用 | **永久免费**，开源自托管，不收订阅费 |
-| 自己安装 | `scripts/install.sh` / `install.ps1` 或 `docker compose up -d` |
-| 真实防护 | 单站点反向代理 + OWASP CRS |
-| 看到效果 | 控制台事件列表、Top 规则/IP；「一键验证防护效果」 |
-| 扫描器拦截 | sqlmap / nikto / acunetix 等 UA |
-| 基础限速 | 按源 IP 约 20 r/s |
-| IP 黑名单 | 控制台维护后 `scripts/apply-blacklist.*` 或 `docker compose restart waf` |
-| 接到业务 | `.env` 里指定 HTTP 或 HTTPS 源站，见下文 |
+| Capability | Notes |
+|------------|--------|
+| Price | **Free forever**, self-hosted, no subscription |
+| Install | `scripts/install.sh` / `install.ps1` or `docker compose up -d` |
+| Real protection | Single-site reverse proxy + OWASP CRS |
+| Visibility | Console event list, top rules/IPs, one-click protection check |
+| Scanner blocking | User-Agents such as sqlmap / nikto / acunetix |
+| Basic rate limit | About 20 r/s per source IP |
+| IP blacklist | Edit in console, then `scripts/apply-blacklist.*` or `docker compose restart waf` |
+| Front your app | Set origin in `.env` (HTTP or HTTPS backend) |
 
-**不含（专业版收费能力）：** 多站点管控台、威胁情报、地理封锁、Bot JS 挑战、虚拟补丁升级、SIEM、合规报表、商用支持。
+**Not included (Professional / paid):** multi-site admin, threat intel, geo-blocking, bot JS challenge, virtual-patch upgrades, SIEM, compliance reports, commercial support, managed SOC ops.
 
-## 一键安装
+Team behind Pro + managed ops: 7 senior engineers from Huawei and Tencent (10+ years each). Community stays free so you can evaluate the engine yourself.
 
-需要 [Docker](https://docs.docker.com/get-docker/)（Windows 用 Docker Desktop）。
+## One-command install
+
+Requires [Docker](https://docs.docker.com/get-docker/) (Docker Desktop on Windows).
 
 ```bash
 # Linux / macOS
@@ -36,47 +38,45 @@ sh scripts/install.sh
 powershell -File scripts/install.ps1
 ```
 
-| 地址 | 作用 |
-|------|------|
-| http://127.0.0.1:8080/ | **防护入口**（默认后面是演示站；改 `BACKEND` 可护你的业务） |
-| http://127.0.0.1:8090/ | **社区控制台**（界面与专业版一致；Pro 菜单可见但点击无反应） |
+| URL | Role |
+|-----|------|
+| http://127.0.0.1:8080/ | **WAF entry** (demo origin by default; change `BACKEND` to protect your app) |
+| http://127.0.0.1:8090/ | **Community console** (same UI family as Pro; Pro-only menus are visible but inactive) |
 
-默认账号：`admin` / `admin`（在 `.env` 的 `DEMO_USER` / `DEMO_PASS` 修改）。
+Default login: `admin` / `admin` (change `DEMO_USER` / `DEMO_PASS` in `.env`).
 
-### 验证防护
+### Smoke test
 
 ```bash
 # Linux / macOS
 sh scripts/smoke-test.sh
-# Windows（若改过端口： $env:WAF_URL="http://127.0.0.1:端口"）
+# Windows (if you changed the port: $env:WAF_URL="http://127.0.0.1:PORT")
 powershell -File scripts/smoke-test.ps1
 ```
 
-正常页 200；XSS / `sqlmap` UA 应为 403。也可在控制台点「一键验证防护效果」，事件表会自动刷新。
+Normal pages should be **200**. XSS / `sqlmap` User-Agent should be **403**. You can also click **one-click protection check** in the console; the event table refreshes automatically.
 
-### 保护真实网站
+### Protect a real site
 
-1. 编辑 `.env`：`BACKEND=http://你的应用:端口`
-2. 设置 `WAF_PUBLIC_URL=http://服务器IP或域名:8080`
+1. Edit `.env`: `BACKEND=http://your-app:port` (or `https://…`)
+2. Set `WAF_PUBLIC_URL=http://YOUR_SERVER_IP_OR_HOST:8080`
 3. `docker compose up -d`
-4. 把公网流量指到 WAF 端口，不要直连应用  
-5. 初期可用 `MODSEC_RULE_ENGINE=DetectionOnly`，确认后再改为 `On`
+4. Point public traffic at the WAF port, not directly at the app
+5. Start with `MODSEC_RULE_ENGINE=DetectionOnly`, then switch to `On` when FPs are acceptable
 
-控制台内也有图文说明：登录后打开 [install.html](console/install.html)（部署后为 `/install.html`）。
+Illustrated steps also live in [console/install.html](console/install.html) (`/install.html` after deploy).
 
-## 防护 HTTP 站点与 HTTPS 站点
+## HTTP vs HTTPS origins
 
-访问方连接的是 **WAF 入口**（默认 `http://<WAF地址>:8080`）。WAF 再按 `.env` 把放行的请求转到源站。源站可以是 HTTP，也可以是 HTTPS。社区版这一层入口本身是 HTTP；若要让访客用 HTTPS 访问 WAF，请在 WAF 前面再放证书终结（专业版提供站点证书管理）。
+Clients hit the **WAF entry** (default `http://<waf-host>:8080`). The WAF forwards allowed requests to the origin. The origin may be HTTP or HTTPS. Community WAF listen port itself is HTTP; terminate TLS in front of the WAF if visitors need HTTPS (Professional includes site certificate management).
 
-改完配置后执行：
+After changing `.env`:
 
 ```bash
 docker compose up -d --force-recreate waf
 ```
 
-### HTTP 源站
-
-源站没有 TLS，例如内网 `192.168.1.10:80`。
+### HTTP origin
 
 ```env
 BACKEND=http://192.168.1.10:80
@@ -87,11 +87,11 @@ SERVER_NAME=www.example.com
 WAF_PUBLIC_URL=http://127.0.0.1:8080
 ```
 
-可直接复制 [`.env.http.example`](.env.http.example)。`PROXY_HOST_HEADER` 填站点域名；源站只认 IP、不看 Host 时，可写成 `$host`。
+Copy [`.env.http.example`](.env.http.example). Use `$host` for `PROXY_HOST_HEADER` if the origin ignores Host and only binds an IP.
 
-### HTTPS 源站
+### HTTPS origin
 
-源站证书在源站上，WAF 用 HTTPS 去连它。必须打开 SNI，并把 Host 写成源站域名。
+The origin owns the certificate. The WAF connects to it with HTTPS. Enable SNI and set Host to the origin hostname.
 
 ```env
 BACKEND=https://www.example.com
@@ -102,40 +102,51 @@ SERVER_NAME=www.example.com
 WAF_PUBLIC_URL=http://127.0.0.1:8080
 ```
 
-可直接复制 [`.env.https.example`](.env.https.example)。
+Copy [`.env.https.example`](.env.https.example).
 
-不要设置 `PROXY_SSL=on`。官方镜像里这个开关表示向上游出示客户端证书，不是「源站使用 HTTPS」。打开后 Nginx 会因缺少客户端证书无法启动，防护端口就没有监听。
+Do **not** set `PROXY_SSL=on`. In the official image that flag means “present a client certificate to upstream”, not “origin uses HTTPS”. Enabling it without a client cert prevents Nginx from starting.
 
-### 对照
-
-| 项目 | HTTP 源站 | HTTPS 源站 |
-|------|-----------|------------|
-| `BACKEND` | `http://主机:端口` | `https://域名` |
-| `PROXY_HOST_HEADER` | 站点域名，或 `$host` | 必须是源站证书上的域名 |
+| Item | HTTP origin | HTTPS origin |
+|------|-------------|--------------|
+| `BACKEND` | `http://host:port` | `https://hostname` |
+| `PROXY_HOST_HEADER` | Site name, or `$host` | Must match the origin certificate name |
 | `UPSTREAM_SSL_SNI` | `off` | `on` |
-| `UPSTREAM_SSL_NAME` | 可保持 `localhost` | 与 `PROXY_HOST_HEADER` 相同 |
-| `PROXY_SSL` | 不要设置 | 不要设置 |
+| `UPSTREAM_SSL_NAME` | may stay `localhost` | same as `PROXY_HOST_HEADER` |
+| `PROXY_SSL` | do not set | do not set |
 
-自检时只访问 WAF 入口。正常页面应为 200；XSS 与 `User-Agent: sqlmap` 应为 403。直接打开源站地址不会经过这台 WAF。
+Smoke-test only the WAF entry. Opening the origin URL bypasses this WAF.
 
-## 目录
+## Layout
 
 ```text
 docker-compose.yml     # waf + demo + api + console
-.env.example           # 默认演示站
-.env.http.example      # 保护 HTTP 源站
-.env.https.example     # 保护 HTTPS 源站
-community-api/         # 社区 API（事件 / 黑名单，标准库 Python）
-rules/                 # CRS 前社区规则
-nginx/                 # 限速模板、拦截页、HTTPS 上游 SNI
-console/               # 安装后控制台（总览 / 试用引导）
-demo/                  # 内置演示站
-scripts/install.*      # 一键安装
-scripts/smoke-test.*   # 拦截自检
-docs/                  # 社区 vs 专业版
+.env.example           # default demo origin
+.env.http.example      # protect an HTTP origin
+.env.https.example     # protect an HTTPS origin
+community-api/         # community API (events / blacklist, stdlib Python)
+rules/                 # community rules before CRS
+nginx/                 # rate-limit templates, block page, HTTPS upstream SNI
+console/               # post-install console
+demo/                  # built-in demo site
+scripts/install.*      # one-command install
+scripts/smoke-test.*   # block self-check
+docs/                  # community vs professional
 ```
 
-## 许可
+## Commercial options (not this repo)
 
-Apache-2.0（本仓库）。运行时镜像与 Nginx / ModSecurity / CRS 见 [NOTICE](NOTICE)。  
-**Ma-WAF Community 永久免费。** Ma-WAF Professional 为商业软件，不在此开源。
+| Tier | Starting USD | What you get |
+|------|----------------|--------------|
+| Community | $0 | This repository |
+| Pro license | see sales | Commercial runtime, more ops features, support window |
+| Managed ops | see sales | Pro + weekly tuning / alert triage by our team |
+
+Landing / contact: https://jarland1022.github.io/Ma-waf-basic/ · WhatsApp · `jarland@mingansec.com`
+
+## License
+
+Apache-2.0 (this repository). Runtime images and Nginx / ModSecurity / CRS: [NOTICE](NOTICE).
+
+**Ma-WAF Community is free forever.** Ma-WAF Professional is commercial software and is not open-sourced here.
+
+Same text: [`README.en.md`](README.en.md).
